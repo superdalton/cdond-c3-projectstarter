@@ -3,15 +3,19 @@ version: 2.1
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-    #parameters:
+    parameters:
       # Add parameter here   
+      workflowid:
+        type : string   
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
-            # Your code here
-            exit 1
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflowid >>
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflowid >>
+            aws s3 rm s3://udapeople-<< parameters.workflowid >> --recursive
+            # exit 1
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -146,41 +150,56 @@ jobs:
             npm audit fix --audit-level=critical --force
             # npm audit --audit-level=critical
 
-#deploy-infrastructure:
-#  docker:
-#    # Docker image here that supports AWS CLI
-#  steps:
-#    # Checkout code from git
-#    - run:
-#        name: Ensure back-end infrastructure exists
-#        command: |
-#          aws cloudformation deploy \
-#            --template-file .circleci/files/backend.yml \
-#            #--tags project=your-tag \
-#            # --stack-name "your back-end stack name with workflow id" \
-#            # --parameter-overrides ID="your workflow id"  
-#            exit 1
-#    - run:
-#        name: Ensure front-end infrastructure exist
-#        command: |
-#          aws cloudformation deploy \
-#            --template-file .circleci/files/frontend.yml \
-#            #--tags project=your-tag \
-#            # --stack-name "your front-end stack name with workflow id" \
-#            # --parameter-overrides ID="your workflow id"  
-#            exit 1
-#    - run:
-#        name: Add back-end ip to ansible inventory
-#        command: |
-#          # Your code here
-#          exit 1
-#    - persist_to_workspace:
-#        root: ~/
-#        paths:
-#          - project/.circleci/ansible/inventory.txt
-#    # Here's where you will add some code to rollback on failure      
-#
-#onfigure-infrastructure:
+  deploy-infrastructure:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+
+      - run:
+          name: Install tar and gzip dependencies
+          command: |
+            yum install -y  tar gzip
+
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+              --tags project=udapeople  
+              # exit 1
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+              --tags project=udapeople  
+              # exit 1
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            Public_IP=$(aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:project,Values=udapeople" \
+              --output text )
+              echo $Public_IP >> .circleci/ansible/inventory.txt
+            # exit 1
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
+      # Here's where you will add some code to rollback on failure     
+      - destroy-environment:
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}" 
+
+#configure-infrastructure:
 #  docker:
 #    # Docker image here that supports Ansible
 #  steps:
@@ -325,11 +344,11 @@ workflows:
          requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      #- deploy-infrastructure:
-      #   requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #    filters:
-      #      branches:
-      #        only: [test-feature-branch]
+      - deploy-infrastructure:
+         requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
       #- configure-infrastructure:
       #    requires: [deploy-infrastructure]
       #- run-migrations:
