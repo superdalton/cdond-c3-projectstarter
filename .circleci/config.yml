@@ -30,9 +30,9 @@ commands:
           command: |
             # Your Memstash or kvdb.io GET URL code goes here
             # Example: Memstash.io
-            # SUCCESS=$(curl -H "token: e52b52de-ee26-41a5-86e8-e8dcc3d995a5" --request GET https://api.memstash.io/values/migration_<< parameters.workflow_id >>)
+            # SUCCESS=$(curl -H "token: e52b52de-ee26-41a5-86e8-e8dcc3d995a5" --request GET https://api.memstash.io/values/migration_<< parameters.workflowid >>)
             # Example: kvdb.io
-            SUCCESS=$(curl --insecure  https://kvdb.io/6XZPMXwv4UrWgTzrhNq4qq/migration_<< parameters.workflow_id >>)
+            SUCCESS=$(curl --insecure  https://kvdb.io/6XZPMXwv4UrWgTzrhNq4qq/migration_<< parameters.workflowid >>)
             # Logic for reverting the database state
             if (( $SUCCESS == 1 ));
             then
