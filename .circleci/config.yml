@@ -528,15 +528,14 @@ jobs:
        # Checkout code from git
       - checkout
 
-       # attach workspace
-      - attach_workspace:
-          at: ~/
-
       - run:
           name: Install dependencies
           command: |
             # your code here
             yum install -y tar gzip
+        # attach workspace
+      - attach_workspace:
+          at: ~/
 
       - run:
           name: Get old stack workflow id
