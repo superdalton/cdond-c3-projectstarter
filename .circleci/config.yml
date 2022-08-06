@@ -26,7 +26,7 @@ commands:
     steps:
       - run:
           name: Revert migrations
-          # Add when this will run
+          when: on_fail          # Add when this will run
           command: |
             # Your Memstash or kvdb.io GET URL code goes here
             # Example: Memstash.io
