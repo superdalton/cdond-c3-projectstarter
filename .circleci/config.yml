@@ -3,7 +3,7 @@ version: 2.1
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-    parameters:
+    #parameters:
       # Add parameter here   
     steps:
       - run:
@@ -15,7 +15,7 @@ commands:
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
-    parameters:
+    #parameters:
       # Add parameter here     
     steps:
       - run:
@@ -69,39 +69,39 @@ jobs:
           paths: [backend/node_modules]
           key: backend-build
 
-  test-frontend:
+#test-frontend:
+#  #docker:
+#    # Docker image here
+#  steps:
+#    # Checkout code from git
+#    # Restore from cache
+#    # Your job code here
+#              
+#test-backend:
     docker:
       # Docker image here
     steps:
       # Checkout code from git
       # Restore from cache
       # Your job code here
-                
-  test-backend:
+#          
+#scan-frontend:
     docker:
       # Docker image here
     steps:
       # Checkout code from git
       # Restore from cache
       # Your job code here
-            
-  scan-frontend:
+#
+#scan-backend:
     docker:
       # Docker image here
     steps:
       # Checkout code from git
       # Restore from cache
       # Your job code here
-
-  scan-backend:
-    docker:
-      # Docker image here
-    steps:
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
-
-  deploy-infrastructure:
+#
+#deploy-infrastructure:
     docker:
       # Docker image here that supports AWS CLI
     steps:
@@ -134,8 +134,8 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure      
-
-  configure-infrastructure:
+#
+#configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
     steps:
@@ -153,8 +153,8 @@ jobs:
             # Your code here
             exit 1
       # Here's where you will add some code to rollback on failure      
-
-  run-migrations:
+#
+#run-migrations:
     docker:
       # Docker image here that supports NodeJS
     steps:
@@ -170,8 +170,8 @@ jobs:
             # Your code here
             exit 1
      # Here's where you will add some code to rollback on failure      
-
-  deploy-frontend:
+#
+#deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
     steps:
@@ -191,8 +191,8 @@ jobs:
           command: |
             # your code here
       # Here's where you will add some code to rollback on failure      
-                    
-  deploy-backend:
+#                  
+#deploy-backend:
     docker:
       # Docker image here that supports Ansible
     steps:
@@ -208,8 +208,8 @@ jobs:
           command: |
             # your code here
       # Here's where you will add some code to rollback on failure  
-
-  smoke-test:
+#
+#smoke-test:
     docker:
       # Lightweight Docker image 
     steps:
@@ -231,8 +231,8 @@ jobs:
           command: |
             # your code here
       # Here's where you will add some code to rollback on failure  
-
-  cloudfront-update:
+#
+#cloudfront-update:
     docker:
       # Docker image here that supports AWS CLI
     steps:
@@ -246,8 +246,8 @@ jobs:
           command: |
             # your code here
       # Here's where you will add some code to rollback on failure  
-
-cleanup:
+#
+#eanup:
     docker:
       # Docker image here
     steps:
@@ -265,7 +265,7 @@ cleanup:
             then
               # your code here
             fi
-            
+#          
 
 workflows:
   default:
