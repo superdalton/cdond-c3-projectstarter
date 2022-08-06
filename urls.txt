@@ -1,0 +1,10 @@
+A text file named urls.txt including:
+Public Url to GitHub repository (not private) [URL01]
+Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02]
+Note: The services should be up and running while the reviewer evaluates your project. 
+If you use Udacity provided AWS account, the EC2 instance will shut down (not terminate) automatically after the 
+session ends at every 4 hours. Therefore, you can consider rerunning the CircleCI pipeline just before the submission 
+for provisioning the new AWS resources and provide the working URL02.
+
+[URL01] : https://github.com/superdalton/cdond-c3-projectstarter
+[URL02] : 
