@@ -246,7 +246,7 @@ jobs:
 
     steps:
     # Checkout code from git
-    - checkout
+      - checkout
       - restore_cache:
           keys: [backend-build]
 
