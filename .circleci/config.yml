@@ -199,26 +199,42 @@ jobs:
           workflowid:
             "${CIRCLE_WORKFLOW_ID:0:7}" 
 
-#configure-infrastructure:
-#  docker:
-#    # Docker image here that supports Ansible
-#  steps:
-#    # Checkout code from git
-#    # Add ssh keys with fingerprint
-#    # attach workspace
-#    - run:
-#        name: Install dependencies
-#        command: |
-#          # Your code here
-#          exit 1
-#    - run:
-#        name: Configure server
-#        command: |
-#          # Your code here
-#          exit 1
-#    # Here's where you will add some code to rollback on failure      
-#
-#un-migrations:
+  configure-infrastructure:
+    docker:
+      # Docker image here that supports Ansible
+      - image : python:3.7-alpine3.11
+    steps:
+      # Checkout code from git
+      - checkout
+      # Add ssh keys with fingerprint
+      - add_ssh_keys: 
+          fingerprints: ["66:d2:5e:0a:2a:c6:af:b0:43:ad:02:e2:de:8b:68:5c"]
+      # attach workspace
+      - attach_workspace:
+          at: ~/
+
+      - run:
+          name: Install tar, gzip, ansible, or awscli dependencies
+          command: |
+            apk add --update ansible
+            apk add --update tar gzip
+            apk add --update openssh-client git
+            apk add --no-cache python3 py3-pip && pip3 install --upgrade pip && pip3 install --no-cache-dir awscli && rm -rf /var/cache/apk/*
+            # exit 1
+      - run:
+          name: Configure server
+          command: |
+            # Your code here
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+            # exit 1
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}" 
+    
+
+#run-migrations:
 #  docker:
 #    # Docker image here that supports NodeJS
 #  steps:
@@ -349,8 +365,8 @@ workflows:
           filters:
             branches:
               only: [master]
-      #- configure-infrastructure:
-      #    requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       #- run-migrations:
       #    requires: [configure-infrastructure]
       #- deploy-frontend:
