@@ -251,6 +251,11 @@ jobs:
           keys: [backend-build]
 
       - run:
+          name: Install dependencies
+          command: |
+            npm install curl
+
+      - run:
           name: Run migrations
           command: |
             # Your code here
