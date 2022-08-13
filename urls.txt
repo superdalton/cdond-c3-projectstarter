@@ -8,3 +8,4 @@ for provisioning the new AWS resources and provide the working URL02.
 
 [URL01] : https://github.com/superdalton/cdond-c3-projectstarter
 [URL02] : http://udapeople-cacda1b.s3-website-us-east-1.amazonaws.com
+[URL02-NEW] : http://udapeople-b301296.s3-website-us-east-1.amazonaws.com
