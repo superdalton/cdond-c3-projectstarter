@@ -7,4 +7,4 @@ session ends at every 4 hours. Therefore, you can consider rerunning the CircleC
 for provisioning the new AWS resources and provide the working URL02.
 
 [URL01] : https://github.com/superdalton/cdond-c3-projectstarter
-[URL02] : 
+[URL02] : http://udapeople-cacda1b.s3-website-us-east-1.amazonaws.com
