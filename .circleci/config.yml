@@ -538,7 +538,7 @@ jobs:
           at: ~/
 
       - run:
-          name: Get old stack workflow id
+          name: Remove old stacks and files
           command: |
             # your code here
             # Fetch the Old workflow ID
@@ -550,15 +550,7 @@ jobs:
             # Fetch the stack names          
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                     --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
-            echo Stack names: "${STACKS[@]}"       
-      - run:
-          name: Remove old stacks and files
-          command: |
-            export OldWorkflowID=$(cat ~/oldworkflowid.txt)
-            echo OldWorkflowID: "${OldWorkflowID}"
-            # You can use any condition like:
-            # if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
-            # if [[ "${OldWorkflowID}" =~ "${STACKS[@]}"  ]]
+            echo Stack names: "${STACKS[@]}"   
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             then
               # your code here
@@ -569,7 +561,6 @@ jobs:
             else
               "---No stack deleted----"
             fi
-
 
 workflows:
   default:
