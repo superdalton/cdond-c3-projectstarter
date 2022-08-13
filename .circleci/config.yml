@@ -573,7 +573,6 @@ jobs:
               "---No stack deleted----"
             fi
 
-
 workflows:
   default:
     jobs:
